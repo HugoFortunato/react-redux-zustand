@@ -1,14 +1,23 @@
 import { useAppSelector } from '../store'
 
 export function Header() {
+  const isCourseLoading = useAppSelector((state) => state.player.isLoading)
   const { currentModule, currentLesson } = useAppSelector((state) => {
     const { currentModuleIndex, currentLessonIndex } = state.player
 
-    const currentModule = state.player.course.modules[currentModuleIndex]
-    const currentLesson = currentModule.lessons[currentLessonIndex]
+    const currentModule = state.player.course?.modules[currentModuleIndex]
+    const currentLesson = currentModule?.lessons[currentLessonIndex]
 
     return { currentModule, currentLesson }
   })
+
+  if (!currentModule || !currentLesson) {
+    return null
+  }
+
+  if (isCourseLoading) {
+    return <h1 className="text-2xl font-bold">Carregando...</h1>
+  }
 
   return (
     <div className="flex flex-col gap-1">
